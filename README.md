@@ -6,7 +6,7 @@
 
 1. Python, version >=3 (experiments made with version 3.6.9)
 2. [HeapDict](https://pypi.org/project/HeapDict/) python library (command `pip install HeapDict`) (experiments made with version 1.0.1)
-3. [Infomap](https://www.mapequation.org/) (experiments made with version 1.3.0)
+3. [Infomap](https://www.mapequation.org/). Users must have a console command `infomap` (experiments made with version 1.3.0). 
 4. [LFR Benchmark](https://sites.google.com/site/andrealancichinetti/files). Source code is given in folder 'LFRBenchmark'.
 
 In order to run test experiment reported in Section III, the user must go in folder 'LFRBenchmark' and run command `make` 
