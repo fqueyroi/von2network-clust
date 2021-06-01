@@ -4,20 +4,32 @@
 
 ## Dependencies and Setup
 
-1. Python, version >=3 (experiments made version 3.6.9)
-2. [Infomap](https://www.mapequation.org/) (experiments made with version 1.3.0)
-3. [LFR Benchmark](https://sites.google.com/site/andrealancichinetti/files). Source code is given in folder 'LFRBenchmark'.
+1. Python, version >=3 (experiments made with version 3.6.9)
+2. [HeapDict](https://pypi.org/project/HeapDict/) python library (command `pip install HeapDict`) (experiments made with version 1.0.1)
+3. [Infomap](https://www.mapequation.org/) (experiments made with version 1.3.0)
+4. [LFR Benchmark](https://sites.google.com/site/andrealancichinetti/files). Source code is given in folder 'LFRBenchmark'.
 
-In order to run test experiment reported in Section III, the user must go in folder 'LFRBenchmark' and run command `make` (see ReadMe.txt in the folder).
-Note this code was developped by the authors of 
->    A.  Lancichinetti,  S.  Fortunato,  and  F.  Radicchi,  *"Benchmark  graphs for  testing  community  detection  algorithms"*, Phys. Rev. E, vol. 78, p.046110, Oct 2008.
+In order to run test experiment reported in Section III, the user must go in folder 'LFRBenchmark' and run command `make` 
+
+See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details **(this code is third party)**.
+
+## Datasets
+
+The three dataset used in the paper are available here. The explanation of each dataset is given in Section VI of the papaer.
+
+1. `maritime_sequences.csv`: Maritime sequences dataset (default dataset used in the script below)
+2. `2011Q1_SEQ.zip` Airport sequences dataset (compressed). 
+3. `trajectories_PoliceStation` Taxis sequences dataset (compressed). 
+
+The structure of input files is described at the end of the document. 
 
 ## Reproducing the experiments
 
 ### LFR Tests cases clustering (Results in Section IV)
 
 In order to reproduce the results given in Fig. 3 (page 5), run
-`python3 TestCasesClustering.py`
+
+        python3 TestCasesClustering.py
 
 The NMI similarity values used to make Fig. 3 correspond to the following columns in the output:
 - 10th Col. (nmi_2o_ns)   : 2-Von Diff Code input
@@ -30,17 +42,21 @@ The boxplots are made using the ggplot2 package of the [R library](https://cran.
 **Warning:** The script creates some temporary files that are not removed at the end.
 However, they are written over during each execution.
 
-### Models Accuracy (Results in Section VI)
+### Models Accuracy (Results in Section VII)
 
-In order to reproduce the results given in col. *'Acc +- 2sd'* of Table I (page 8), run `python3 HONModelsAccuracy.py`
+In order to reproduce the results given in col. *'Acc +- 2sd'* of Table I (page 8), run 
+
+        python3 HONModelsAccuracy.py
 
 To change the dataset used, open file `HONModelsAccuracy.py` and change the variable `filename`.
 Using the default value will lauch the experiments on the Maritime dataset (file `maritime_sequences.csv`). 
 All results are printed inside the Python console.
 
-### Networks and Clustering Comparison (Results in Section VI)
+### Networks and Clustering Comparison (Results in Section VII)
 
-In order to reproduce the results given in Fig. 4, Table I and Table II (page 8), run `python3 HONModelsClustering.py`
+In order to reproduce the results given in Fig. 4, Table I and Table II (page 8), run 
+
+        python3 HONModelsClustering.py
 
 To change the dataset used, open file `HONModelsAccuracy.py` and change the variable `filename`.
 Using the default value will lauch the experiments on the Maritime dataset (file `maritime_sequences.csv`). 
