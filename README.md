@@ -16,7 +16,7 @@ See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details.
 
 ## Datasets
 
-The three dataset used in the paper are available here. The explanation of each dataset is given in Section VI of the papaer.
+The three datasets used in the paper are available here. An explanation of each dataset is given in Section VI of the paper.
 
 1. `maritime_sequences.csv`: Maritime sequences dataset (default dataset used in the script below)
 2. `2011Q1_SEQ.zip` Airport sequences dataset (compressed). 
