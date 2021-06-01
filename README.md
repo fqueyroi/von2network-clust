@@ -23,7 +23,7 @@ The three dataset used in the paper are available here. The explanation of each 
 
 The structure of input files is described at the end of the document. 
 
-**The experiments also use third party code** (files `BuildRulesFast.py` and `BuildNetwork.py`) for the generation of relevant subsequences in a input dataset and the generation of the corresponding Von networks. The files are minor modifications of the ones available at https://github.com/xyjprc/hon (last checked 06/01/2021)
+**The experiments also use third party code** (files `BuildRulesFast.py` and `BuildNetwork.py`) for the generation of relevant subsequences in a input dataset and the generation of the corresponding Von networks. The files are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021)
 
 ## Reproducing the experiments
 
