@@ -19,7 +19,7 @@ The three dataset used in the paper are available here. The explanation of each 
 
 1. `maritime_sequences.csv`: Maritime sequences dataset (default dataset used in the script below)
 2. `2011Q1_SEQ.zip` Airport sequences dataset (compressed). 
-3. `trajectories_PoliceStation` Taxis sequences dataset (compressed). 
+3. `trajectories_PoliceStation.zip` Taxis sequences dataset (compressed). 
 
 The structure of input files is described at the end of the document. 
 
