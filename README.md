@@ -10,8 +10,9 @@
 4. [LFR Benchmark](https://sites.google.com/site/andrealancichinetti/files). Source code is given in folder 'LFRBenchmark'.
 
 In order to run test experiment reported in Section III, the user must go in folder 'LFRBenchmark' and run command `make` 
+See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details.
 
-See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details **(this code is third party)**.
+**The experiments scripts also use third party code.** Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in a input dataset and the generation of the corresponding Von networks. The scripts are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
 
 ## Datasets
 
@@ -22,8 +23,6 @@ The three dataset used in the paper are available here. The explanation of each 
 3. `trajectories_PoliceStation.zip` Taxis sequences dataset (compressed). 
 
 The structure of input files is described at the end of the document. 
-
-**The experiments also use third party code** (files `BuildRulesFast.py` and `BuildNetwork.py`) for the generation of relevant subsequences in a input dataset and the generation of the corresponding Von networks. The files are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021)
 
 ## Reproducing the experiments
 
