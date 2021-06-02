@@ -1,22 +1,21 @@
 # Source Code and Datasets for submission "Toward Random Walk Based Clustering of Variable-Order Networks" (ICDM 2021)
 
-**Note:** This folder does not contain a main script for all experiments but different ones explained below 
+**Notes:** This folder does not contain a main script for all experiments but different ones explained below 
+
+**The experiments' scripts use some third party codes:** Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The files are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
 
 ## Dependencies and Setup
 
 1. Python, version >=3 (experiments made with version 3.6.9)
 2. [HeapDict](https://pypi.org/project/HeapDict/) python library (command `pip install HeapDict`) (experiments made with version 1.0.1)
 3. [Infomap](https://www.mapequation.org/). Users must have a console command `infomap` (experiments made with version 1.3.0). 
-4. [LFR Benchmark](https://sites.google.com/site/andrealancichinetti/files). Source code is given in folder 'LFRBenchmark'.
+4. [LFR Benchmark](https://sites.google.com/site/andrealancichinetti/files). Source code is given in folder 'LFRBenchmark'. Also requires `gcc` (experiments made with version 7.5.0). 
 
 In order to run test experiment reported in Section III, the user must go in folder 'LFRBenchmark' and run command `make` 
 See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details.
+We corrected a small bug occuring when compiling the program with gcc version >=7.5.0 (it is not related to the network generation itself). Original code available at https://sites.google.com/site/andrealancichinetti/files/binary_networks.tar.gz (last check June 2021).
 
-**The experiments' scripts also use third party codes.**
 
-- Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The scripts are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
-
-- LFR Benchmark scripts are used for LFR tests cases clustering. We corrected a bug occuring while compiling with `make` (and gcc version 9.3.0) caused by non-void functions in `LFRBenchmark/Sources/print.cpp` and `LFRBenchmark/Sources/histograms.cpp`. Original scripts are available at https://sites.google.com/site/andrealancichinetti/files/binary_networks.tar.gz (last check June 2021).
 
 ## Datasets
 
