@@ -33,8 +33,8 @@ In order to reproduce the results given in Fig. 3 (page 5), run
         python3 TestCasesClustering.py
 
 The NMI similarity values used to make Fig. 3 correspond to the following columns in the output:
-- 10th Col. (nmi_2o_ns)   : 2-Von Diff Code input
-- 14th Col. (nmi_2o_unif) : 2-Von Same Code input
+- 10th Col. (nmi_2o_ns)   : 2-Von input where different codes are assigned to representations of a same location within a given cluster
+- 14th Col. (nmi_2o_unif) : 2-Von input where a unique code is assigned to representations of a same location within a given cluster
 - 18th Col. (nmi_agg)     : Min 2-Von       input
 - 22th Col.,(nmi_fon)     : 2-Fon           input
 
