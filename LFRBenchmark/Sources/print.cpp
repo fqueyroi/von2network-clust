@@ -8,6 +8,7 @@ int cherr() {
 	cerr<<"the check failed"<<endl;
 	int e;
 	cin>>e;
+	return 0;
 	
 }
 
@@ -17,6 +18,7 @@ int cherr(double a) {
 	cerr<<"the check failed because of "<<a<<endl;
 	int e;
 	cin>>e;
+	return 0;
 	
 }
 

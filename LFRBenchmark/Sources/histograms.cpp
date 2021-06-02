@@ -637,7 +637,7 @@ int int_histogram (vector <int> &c, ostream & out) {
 		it->second=it->second*freq;
 	
 	prints(hist, out);
-
+	return 0;
 
 
 }
@@ -666,7 +666,7 @@ int int_histogram (deque <int> &c, ostream & out) {
 		it->second=it->second*freq;
 	
 	prints(hist, out);
-
+	return 0;
 
 
 }
