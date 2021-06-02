@@ -12,7 +12,9 @@
 In order to run test experiment reported in Section III, the user must go in folder 'LFRBenchmark' and run command `make` 
 See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details.
 
-**The experiments' scripts also use third party code.** Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The scripts are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
+**The experiments' scripts also use third party codes.**
+Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The scripts are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
+LFR Benchmark scripts are used LFR tests cases clustering. We corrected a bug occuring while compiling with `make` (and gcc version 9.3.0) caused by non-void functions in `LFRBenchmark/Sources/print.cpp` and `LFRBenchmark/Sources/histograms.cpp`. Original scripts are available at https://sites.google.com/site/andrealancichinetti/files/binary_networks.tar.gz .
 
 ## Datasets
 
