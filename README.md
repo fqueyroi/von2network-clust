@@ -16,7 +16,7 @@ See the `ReadMe.txt` in the folder 'LFRBenchmark' for more details.
 
 - Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The scripts are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
 
-- LFR Benchmark scripts are used for LFR tests cases clustering. We corrected a bug occuring while compiling with `make` (and gcc version 9.3.0) caused by non-void functions in `LFRBenchmark/Sources/print.cpp` and `LFRBenchmark/Sources/histograms.cpp`. Original scripts are available at https://sites.google.com/site/andrealancichinetti/files/binary_networks.tar.gz .
+- LFR Benchmark scripts are used for LFR tests cases clustering. We corrected a bug occuring while compiling with `make` (and gcc version 9.3.0) caused by non-void functions in `LFRBenchmark/Sources/print.cpp` and `LFRBenchmark/Sources/histograms.cpp`. Original scripts are available at https://sites.google.com/site/andrealancichinetti/files/binary_networks.tar.gz (last check June 2021).
 
 ## Datasets
 
