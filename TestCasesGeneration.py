@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 Functions to generate 1st order networks using command LFRBenchmark/benchmark
-also contains functions to generate the ideal higher order networks built from
+also contains functions to generate the ideal higher order network built from
 the LFR generated network, clustering and using the flow dynamic described in the
 paper.
 '''

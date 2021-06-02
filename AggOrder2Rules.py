@@ -89,8 +89,8 @@ def aggregationScore(c1, c2, dp): # Return bool, float
 ##################################################################
 def aggregate(rules, dp):
 	'''
-	Aggregate order-2 rules that have the same last symbol symb
-	using a hierarchical clustering procedure
+	Aggregate 2nd-order rules that have the same last symbol "symb"
+	using an hierarchical clustering procedure
 
 	Parameters:
 	-----------
@@ -111,7 +111,7 @@ def aggregate(rules, dp):
 		## No aggregation possible if only two rules
 		return clust
 
-	# Create a heap with the pair of cluster that can be merged
+	# Create a heap with the pair of clusters that can be merged
 	# using the aggregation score
 	hd = heapdict.heapdict()
 	keys_clust = list(clust.keys())
