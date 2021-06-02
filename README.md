@@ -74,7 +74,7 @@ The cumulative plots in Fig. 4 are made using the ggplot2 package of the [R libr
 The clusters found for each location are printed in file  `./clusters.csv`.
 The reported variables are `id;NETi` where `NETi` is either the Von2, Agg Von2 or Fon2 network.
 - `id`     : id of the location
-- `NETi`   : list of ids of clusters (int) the location belongs to in network NETi`
+- `NETi`   : list of ids of clusters (int) the location belongs to in network `NETi` 
 
 ## Using different Datasets of Sequences
 
