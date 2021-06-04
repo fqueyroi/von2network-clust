@@ -2,7 +2,7 @@
 
 **Notes:** This folder does not contain a main script for all experiments but different ones explained below 
 
-**The experiments' scripts use some third party codes:** Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The files are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
+The experiments' scripts use some third party code: Files `BuildRulesFast.py` and `BuildNetwork.py` are used for the generation of relevant subsequences in an input dataset and the generation of the corresponding Von networks. The files are minor modifications of the ones available at https://github.com/xyjprc/hon (last check June 2021).
 
 ## Dependencies and Setup
 
@@ -81,14 +81,14 @@ The reported variables are `id;NETi` where `NETi` is either the Von2, Agg Von2 o
 
 ## Using different Datasets of Sequences
 
-The file containing the sequences have the following format
+The input file structure containing the sequences should have the following format
 
         ID1 L1 L2 L3 ...
         ID2 L5 L6 L2 ...
         ID3 L2 L4 ...
         ...
 
-The first element of each line is the ID of the sequence. 
+The first element of each line is the id of the sequence. You can also drop this column and set `is_line_id=False` when the function `readSequenceFile()` is called. 
 The rest of the line is the sequence of successive visited locations `Lx`, any string can be used to identified locations.
 The separating character (variable `sep`) can be changed in each experiment script.
 
