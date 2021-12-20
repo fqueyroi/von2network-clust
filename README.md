@@ -1,4 +1,4 @@
-# Source Code and Datasets for submission "Toward Random Walk Based Clustering of Variable-Order Networks" (ICDM 2021)
+# Source Code and Datasets for submission "Toward Random Walk Based Clustering of Variable-Order Networks"
 
 **Notes:** This folder does not contain a main script for all experiments but different ones explained below 
 
