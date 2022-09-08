@@ -8,8 +8,8 @@ import HONUtils
 
 class FastHONRulesBuilder():
   ###########################################
-  def __init__(self,trajectories,max_order,min_support):
-    self.ThresholdMultiplier = 1.
+  def __init__(self,trajectories,max_order,min_support, ThresholdMultiplier):
+    self.ThresholdMultiplier = ThresholdMultiplier
     self.Count = defaultdict(lambda: defaultdict(int))
     self.Rules = defaultdict(dict)
     self.Distribution = defaultdict(dict)
@@ -56,7 +56,7 @@ class FastHONRulesBuilder():
         Distr = self.Distribution[Valid]
         supp_curr = sum([x for x in self.Count[Curr].values()])
         # test if divergence has no chance exceeding the threshold when going for higher order
-        if HONUtils.KLD(HONUtils.MaxDivergence(self.Distribution[Curr]), Distr) < HONUtils.KLDThreshold(order + 1, supp_curr):
+        if HONUtils.KLD(HONUtils.MaxDivergence(self.Distribution[Curr]), Distr) < (HONUtils.KLDThreshold(order + 1, supp_curr, self.ThresholdMultiplier)):
             self.AddToRules(Valid)
         else:
             #if order + 1 not in ObservationBuiltForOrder:
@@ -68,7 +68,7 @@ class FastHONRulesBuilder():
                     ExtDistr = self.Distribution[ExtSource]  # Pseudocode in Algorithm 1 has a typo here
                     supp_ext = sum([x for x in self.Count[ExtSource].values()])
                     divergence = HONUtils.KLD(ExtDistr, Distr)
-                    if divergence > HONUtils.KLDThreshold(order + 1, supp_ext):
+                    if divergence > (HONUtils.KLDThreshold(order + 1, supp_ext,self.ThresholdMultiplier)):
                         # higher-order dependencies exist for order order + 1
                         # keep comparing probability distribution of higher orders with current order
                         self.ExtendRule(ExtSource, ExtSource, order + 1)
@@ -128,3 +128,4 @@ class FastHONRulesBuilder():
             if C[s][t] > 0:
                 self.Distribution[s][t] = 1.0 * C[s][t] / CsSupport
                 self.SourceToExtSource[s[1:]].add(s)
+

@@ -57,3 +57,4 @@ def RewireTails(Graph):
         Graph[source][target] = weight
     for (source, target) in ToRemove:
         del(Graph[source][target])
+

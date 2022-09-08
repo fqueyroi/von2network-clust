@@ -194,3 +194,4 @@ def fonProbSeq(order2rules, seq):
 		p = fonProbabilityNextSymbol(order2rules, context, seq[i])
 		res += p
 	return res / (len(seq) - 2.)
+

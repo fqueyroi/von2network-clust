@@ -27,8 +27,8 @@ def KLD(dA, dB):
 	return res
 
 ######################################################################################
-def KLDThreshold(order, support):
-	return order / math.log(1 + support, 2)
+def KLDThreshold(order, support,ThresholdMultiplier):
+	return ThresholdMultiplier * (order / math.log(1 + support, 2))
 
 ######################################################################################
 def sequenceToString(seq):
@@ -86,3 +86,4 @@ def removeRepetitions(sequences):
 				nseq.append(s)
 		nsequences.append(nseq)
 	return nsequences
+

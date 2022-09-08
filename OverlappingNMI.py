@@ -84,3 +84,4 @@ def NMI_max(clust1, clust2):
 	nmi = iXY / max(hX,hY)
 
 	return nmi
+

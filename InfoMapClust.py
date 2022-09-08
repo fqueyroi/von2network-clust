@@ -281,3 +281,4 @@ def readStateClustering(mapRule, network_file, output_dir):
 				clust[mapRule[n]] = []
 			clust[mapRule[n]].append(c)
 	return codelength, gain, clust, time
+

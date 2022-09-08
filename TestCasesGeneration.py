@@ -154,3 +154,4 @@ def stateNetwork(network, clustering):
 							states_network[state_jk] = {}
 						states_network[state_ij][state_jk] = 1.
 	return nodes, states, states_network
+

@@ -50,3 +50,4 @@ def buildFON2Network(sequences):
 					states_network[state_ij][state_jk] = 0.
 				states_network[state_ij][state_jk] += 1.
 	return nodes, states, states_network
+
