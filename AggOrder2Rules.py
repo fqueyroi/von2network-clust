@@ -11,7 +11,6 @@ HeapDict https://pypi.org/project/HeapDict/
 '''
 
 import HONUtils
-import math, sys
 import heapdict
 
 from collections import defaultdict
@@ -58,7 +57,7 @@ def getUnionCount(count1, count2):
 	return res
 
 ##################################################################
-def aggregationScore(c1, c2, dp, multiplier): # Return bool, float
+def aggregationScore(c1, c2, dp): # Return bool, float
 	'''
 	Parameters:
 	-----------
@@ -70,7 +69,6 @@ def aggregationScore(c1, c2, dp, multiplier): # Return bool, float
 	can_be_merge : bool (can the two rules be merged?)
 	score        : float (proximity between the two rules)
 	'''
-	multiplier = 1
 	d1 = HONUtils.getDistribution(c1)
 	d2 = HONUtils.getDistribution(c2)
 
@@ -78,16 +76,16 @@ def aggregationScore(c1, c2, dp, multiplier): # Return bool, float
 	s1, s2, s1u2 = sum(c1.values()), sum(c2.values()), sum(c1u2.values())
 	d1u2 = HONUtils.getDistribution(c1u2)
 
-	kld1m, thres1m = HONUtils.KLD(d1, d1u2), HONUtils.KLDThreshold(2, s1, multiplier)
-	kld2m, thres2m = HONUtils.KLD(d2, d1u2), HONUtils.KLDThreshold(2, s2, multiplier)
-	kld1u2p, thres1u2p = HONUtils.KLD(d1u2, dp), HONUtils.KLDThreshold(2, s1u2, multiplier)
+	kld1m, thres1m = HONUtils.KLD(d1, d1u2), HONUtils.KLDThreshold(2, s1, 1.)
+	kld2m, thres2m = HONUtils.KLD(d2, d1u2), HONUtils.KLDThreshold(2, s2, 1.)
+	kld1u2p, thres1u2p = HONUtils.KLD(d1u2, dp), HONUtils.KLDThreshold(2, s1u2, 1.)
 
 	can_be_merge = kld1u2p > thres1u2p and kld1m < thres1m and kld2m < thres2m
 	score = kld1m + kld2m # - 2.*kld1u2p
 	return can_be_merge, score
 
 ##################################################################
-def aggregate(rules, dp,mult=1):
+def aggregate(rules, dp):
 	'''
 	Aggregate 2nd-order rules that have the same last symbol "symb"
 	using an hierarchical clustering procedure
@@ -121,7 +119,7 @@ def aggregate(rules, dp,mult=1):
 		for i2 in range(i1 + 1, len(clust)):
 			r2 = keys_clust[i2]
 			c2 = clust[r2]
-			can_merge, score = aggregationScore(c1, c2, dp,mult)
+			can_merge, score = aggregationScore(c1, c2, dp)
 			if can_merge:
 				# print "Can merge !"
 				hd[r1, r2] = score
@@ -149,7 +147,7 @@ def aggregate(rules, dp,mult=1):
 
 		## update heapdict with new pairs that can be merged
 		for r in clust.keys():
-			can_merge, score = aggregationScore(clust[r],c1u2,dp,mult)
+			can_merge, score = aggregationScore(clust[r],c1u2,dp)
 			if can_merge:
 				hd[r, tuple(new_grp_rules)] = score
 		clust[tuple(new_grp_rules)] = c1u2
@@ -157,7 +155,7 @@ def aggregate(rules, dp,mult=1):
 	return clust
 
 ##################################################################
-def aggregateRules(rules,mult):
+def aggregateRules(rules):
 	'''
 	Main method
 	Aggregate detected 2nd order rules that are extension of the same
@@ -180,7 +178,7 @@ def aggregateRules(rules,mult):
 		subRules = firstOrderMap[firstOrderRule]
 		cFirstOrder  = rules[tuple([firstOrderRule])]
 		dp = HONUtils.getDistribution(cFirstOrder)
-		subClust = aggregate(subRules,dp,mult)
+		subClust = aggregate(subRules,dp)
 		clusts[firstOrderRule] = subClust
 	return clusts
 

@@ -22,12 +22,12 @@ from collections import defaultdict
 ##########################
 
 ## Computing results on the Maritime Dataset
-#filename = "./maritime_sequences.csv"
-#sep = " " ## the string separating elements in a sequence
+filename = "./maritime_sequences.csv"
+sep = " " ## the string separating elements in a sequence
 
 ## Computing results on the Airports Dataset
-filename = "./2011Q1_SEQ.csv"
-sep = ","
+# filename = "./2011Q1_SEQ.csv"
+# sep = ","
 
 ## Computing results on the Taxis Dataset
 #filename = "./trajectories_PoliceStation.csv"
@@ -87,8 +87,7 @@ sequences = HONUtils.removeRepetitions(sequences)
 
 ## Build rules
 start_time = time.time()
-thres = 1.
-rule_builder = BuildRulesFast.FastHONRulesBuilder(sequences,2,1,thres)
+rule_builder = BuildRulesFast.FastHONRulesBuilder(sequences,2,1,1.)
 rules = rule_builder.ExtractRules()
 time_build_rules =  time.time() - start_time
 
@@ -126,14 +125,10 @@ final_build_times.append(time_build_von2)
 print('Done.')
 
 ## Agg Von-2
-time_build_von2 = time_build_rules + (time.time() - start_time)
-von2_node_weight  = InfoMapClust.uniformNodeWeights(network)
-
-nodes, states_von2 = InfoMapClust.getStates(network)
 print('#################################')
 print(f'Computing clustering for Aggregated VON2 ({nb_loop} infomap runs)')
 start_time = time.time()
-clusts = AggOrder2Rules.aggregateRules(rules,mult = 2.8 )
+clusts = AggOrder2Rules.aggregateRules(rules)
 flatten_agg_rules = AggOrder2Rules.flattenAgg2ndOrderRules(rules, clusts)
 agg_network       = AggOrder2Rules.mergeNodes(network, flatten_agg_rules)
 time_build_agg = time_build_rules + (time.time() - start_time)

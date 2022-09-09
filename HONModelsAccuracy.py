@@ -11,7 +11,6 @@ import numpy as np
 import HONUtils
 import AccuracyUtils
 
-import statistics
 import BuildRulesFast
 import AggOrder2Rules
 import FON2StatesNetwork
@@ -24,14 +23,17 @@ import time
 ## Computing results on the Maritime Dataset
 filename = "./maritime_sequences.csv"
 sep = " " ## the string separating elements in a sequence
+threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Computing results on the Airports Dataset
 #filename = "./2011Q1_SEQ.csv"
 #sep = ","
+# threshold_multi = 3.6 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Computing results on the Taxis Dataset
 #filename = "./trajectories_PoliceStation.csv"
 #sep = " "
+# threshold_multi = 4.4 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Read trajectories file
 sequences = HONUtils.readSequenceFile(filename,True,sep)
@@ -43,69 +45,71 @@ sequences = HONUtils.removeRepetitions(sequences)
 
 nb_run = 50 ## Number of test for each network (eg 50)
 testing_ratio = 0.1
-# Tau, to adjust size of VON2
-thresholdMult = [1]
 
-numberDict = defaultdict(int)
 ## Perform 'nb_run' tests taking 'testing_ratio' of the input sequences
 ## as testing subset
 ## The last 3 cols printed are the Acc (Eq.10 in the paper)
-## for the Von2, Agg Von2 et Fon2 networks respectively
-print('id_run,nb_seq_build,nb_seq_test,score_von2,score_agg,score_fon2')
-score_acc_list = []
+## for the Von2, Von2(alpha*), Agg Von2 et Fon2 networks respectively
+## alpha* threshold given such that Von2(alpha*) is as sparse as Agg Von2 (Eq. 2)
+
+print('id_run,nb_seq_build,nb_seq_test,score_von2,score_sparse,score_agg,score_fon2')
+
 for i in range(nb_run):
-	for j in thresholdMult :
-		## Split into Training and Testing sets
-		training, testing = [], []
-		training, testing = AccuracyUtils.sampleSequences(sequences, testing_ratio)
+	## Split into Training and Testing sets
+	training, testing = [], []
+	training, testing = AccuracyUtils.sampleSequences(sequences, testing_ratio)
 
-		## Build relevant order 2 extensions (Von2 network)
-		start = time.time()
-		rule_builder = BuildRulesFast.FastHONRulesBuilder(training,2,1,j)
-		rules = rule_builder.ExtractRules()
-		start = time.time()
-		## Aggregate 2nd order extension (Agg Von2 network)
-		clusts = AggOrder2Rules.aggregateRules(rules,j)
-		flatten_agg_rules = AggOrder2Rules.flattenAgg2ndOrderRules(rules, clusts)
-		## Build Fix order 2 extensions (Fon2 network)
-		fon2rules = FON2StatesNetwork.order2Rules(training)
-		#############
-		## Results ##
-		#############
+	## Build relevant order 2 extensions (Von2 network)
+	rule_builder = BuildRulesFast.FastHONRulesBuilder(training, max_order=2, min_support=1, ThresholdMultiplier=1.)
+	rules = rule_builder.ExtractRules()
+	## Aggregate 2nd order extension (Agg Von2 network)
+	clusts = AggOrder2Rules.aggregateRules(rules)
+	flatten_agg_rules = AggOrder2Rules.flattenAgg2ndOrderRules(rules, clusts)
+	## Build VON2 using the given threshold multiplier choosen such that
+	## nb of representations is close to Agg-Von2
+	sparse_rule_builder = BuildRulesFast.FastHONRulesBuilder(training, max_order=2, min_support=1, ThresholdMultiplier=threshold_multi)
+	sparse_rules = sparse_rule_builder.ExtractRules()
+	## Build Fix order 2 extensions (Fon2 network)
+	fon2rules = FON2StatesNetwork.order2Rules(training)
 
-		## Extract 1st rules
-		## (for tests using the Agg Von2 model)
-		firstOrderRules = {}
-		avg = {}
-		for r in rules:
-			if len(r)==1:
-				firstOrderRules[r] = rules[r]
-				avg[r] = 0
-		for r in rules:
-			if len(r) == 1:
-				for p in rules:
-					if len(p) > 1 and p[1] == r[0]:
-						avg[r] += 1
-		## Compute the Accuracy capabilities of the three HON networks
-		## Eq. (10) in the paper
-		score_non_agg = 0.
-		score_agg     = 0.
-		score_fon2    = 0.
-		nb_test_length3 = 0.
-		for test_index in range(len(testing)):
-			test_seq = testing[test_index]
-			if len(test_seq)>=3:
-				score_non_agg += AccuracyUtils.nonAggRulesProbSeq(rules,test_seq)
-				score_agg     += AccuracyUtils.aggRulesProbSeq(firstOrderRules,clusts,test_seq)
-				score_fon2    += AccuracyUtils.fonProbSeq(fon2rules,test_seq)
-				nb_test_length3 += 1.
-		score_non_agg = score_non_agg / nb_test_length3
-		score_agg     = score_agg / nb_test_length3
-		score_fon2    = score_fon2 / nb_test_length3
-		score_acc_list.append(score_non_agg)
 
-		## Outputs
-		print(f'{i+1},{len(training)},{int(nb_test_length3)},{score_non_agg},{score_agg},{score_fon2}')
+	#############
+	## Results ##
+	#############
 
-print('Average accuracy score, SD')
-print(np.mean(score_acc_list),np.std(score_acc_list))
+	## Extract 1st rules
+	## (for tests using the Agg Von2 model)
+	firstOrderRules = {}
+	avg = {}
+	for r in rules:
+		if len(r)==1:
+			firstOrderRules[r] = rules[r]
+			avg[r] = 0
+	for r in rules:
+		if len(r) == 1:
+			for p in rules:
+				if len(p) > 1 and p[1] == r[0]:
+					avg[r] += 1
+	## Compute the Accuracy capabilities of the three HON networks
+	## Eq. (10) in the paper
+	score_non_agg = 0.
+	score_agg     = 0.
+	score_fon2    = 0.
+	score_sparse  = 0.
+	nb_test_length3 = 0.
+	for test_index in range(len(testing)):
+		test_seq = testing[test_index]
+		if len(test_seq)>=3:
+			score_non_agg += AccuracyUtils.nonAggRulesProbSeq(rules,test_seq)
+			score_agg     += AccuracyUtils.aggRulesProbSeq(firstOrderRules,clusts,test_seq)
+			score_fon2    += AccuracyUtils.fonProbSeq(fon2rules,test_seq)
+			score_sparse  += AccuracyUtils.nonAggRulesProbSeq(sparse_rules,test_seq)
+			nb_test_length3 += 1.
+	score_non_agg = score_non_agg / nb_test_length3
+	score_agg     = score_agg / nb_test_length3
+	score_fon2    = score_fon2 / nb_test_length3
+	score_sparse  = score_sparse / nb_test_length3
+
+
+	## Outputs
+	print(f'{i+1},{len(training)},{int(nb_test_length3)},{score_non_agg},{score_sparse},{score_agg},{score_fon2}')
