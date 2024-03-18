@@ -21,23 +21,38 @@ import time
 ##########################
 
 ## Computing results on the Maritime Dataset
-filename = "./maritime_sequences.csv"
-sep = " " ## the string separating elements in a sequence
-threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
+# filename = "./maritime_sequences.csv"
+# sep = " " ## the string separating elements in a sequence
+# threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
+# filename = "./ports_2009.ngram"
+# sep = ","
+# threshold_multi = 3.05
 
 ## Computing results on the Airports Dataset
 #filename = "./2011Q1_SEQ.csv"
-#sep = ","
-# threshold_multi = 3.6 # Alpha, to adjust size of VON2 to Agg-VON2
+filename = "./US_flights.ngram"
+sep = ","
+threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Computing results on the Taxis Dataset
 #filename = "./trajectories_PoliceStation.csv"
 #sep = " "
 # threshold_multi = 4.4 # Alpha, to adjust size of VON2 to Agg-VON2
 
+## Computing results on the Wikispeedia dataset
+# filename = "./wikispeedia_top100.ngram"
+# sep = ","
+# threshold_multi = 2.4 
+
+## Computing results on the MSNBC dataset
+# filename = "./msnbc990928.ngram"
+# sep = " "
+# threshold_multi = 2.5
+
 ## Read trajectories file
-sequences = HONUtils.readSequenceFile(filename,True,sep)
+sequences = HONUtils.readSequenceFile(filename, False, sep)
 sequences = HONUtils.removeRepetitions(sequences)
+
 
 #########################
 ## Parameters          ##
@@ -52,7 +67,7 @@ testing_ratio = 0.1
 ## for the Von2, Von2(alpha*), Agg Von2 et Fon2 networks respectively
 ## alpha* threshold given such that Von2(alpha*) is as sparse as Agg Von2 (Eq. 2)
 
-print('id_run,nb_seq_build,nb_seq_test,score_von2,score_sparse,score_agg,score_fon2')
+print('id_run,nb_symb,nb_seq_build,nb_seq_test,nn_von2,nn_sparse,nn_agg,nn_fon2,score_von2,score_sparse,score_agg,score_fon2')
 
 for i in range(nb_run):
 	## Split into Training and Testing sets
@@ -70,6 +85,7 @@ for i in range(nb_run):
 	sparse_rule_builder = BuildRulesFast.FastHONRulesBuilder(training, max_order=2, min_support=1, ThresholdMultiplier=threshold_multi)
 	sparse_rules = sparse_rule_builder.ExtractRules()
 	## Build Fix order 2 extensions (Fon2 network)
+	nodes, fon2_states, fon2_state_net = FON2StatesNetwork.buildFON2Network(training)
 	fon2rules = FON2StatesNetwork.order2Rules(training)
 
 
@@ -105,11 +121,24 @@ for i in range(nb_run):
 			score_fon2    += AccuracyUtils.fonProbSeq(fon2rules,test_seq)
 			score_sparse  += AccuracyUtils.nonAggRulesProbSeq(sparse_rules,test_seq)
 			nb_test_length3 += 1.
-	score_non_agg = score_non_agg / nb_test_length3
-	score_agg     = score_agg / nb_test_length3
-	score_fon2    = score_fon2 / nb_test_length3
-	score_sparse  = score_sparse / nb_test_length3
+	if nb_test_length3 > 0:
+		score_non_agg = score_non_agg / nb_test_length3
+		score_agg     = score_agg / nb_test_length3
+		score_fon2    = score_fon2 / nb_test_length3
+		score_sparse  = score_sparse / nb_test_length3
+		
+	## size Alphabet
+	A = set()
+	for seq in training:
+		for s in seq:
+			A.add(s)
+
+	# nn_fon2 = len(fon2_state_net)
+	nn_fon2 = len(A)
+	for state_ij, out_neigh in fon2_state_net.items():
+		if len(out_neigh)>0:
+			nn_fon2 += 1
 
 
 	## Outputs
-	print(f'{i+1},{len(training)},{int(nb_test_length3)},{score_non_agg},{score_sparse},{score_agg},{score_fon2}')
+	print(f'{i+1},{len(A)},{len(training)},{int(nb_test_length3)},{len(rules)},{len(sparse_rules)},{len(flatten_agg_rules)},{nn_fon2},{score_non_agg},{score_sparse},{score_agg},{score_fon2}')

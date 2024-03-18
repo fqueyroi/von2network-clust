@@ -22,16 +22,32 @@ from collections import defaultdict
 ##########################
 
 ## Computing results on the Maritime Dataset
-filename = "./maritime_sequences.csv"
-sep = " " ## the string separating elements in a sequence
+# filename = "./maritime_sequences.csv"
+# sep = " " ## the string separating elements in a sequence
+# filename = "./ports_2009.ngram"
+# sep = ","
+# threshold_multi = 3.05
 
 ## Computing results on the Airports Dataset
 # filename = "./2011Q1_SEQ.csv"
+# filename = "./US_flights.ngram"
 # sep = ","
+# threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Computing results on the Taxis Dataset
 #filename = "./trajectories_PoliceStation.csv"
 #sep = " "
+
+## Computing results on the Wikispeedia dataset
+# filename = "./wikispeedia_top100.ngram"
+# sep = ","
+# threshold_multi = 2.4 
+
+## Computing results on the MSNBC dataset
+filename = "./msnbc990928.ngram"
+sep = " "
+threshold_multi = 2.5
+
 
 save_cluster_file = "./clusters.csv"
 save_stats_file   = "./clusters_stats.csv"
@@ -82,7 +98,7 @@ def countClusters(clust):
 ################################################
 
 ## Read trajectories file
-sequences = HONUtils.readSequenceFile(filename,True,sep)
+sequences = HONUtils.readSequenceFile(filename,False,sep)
 sequences = HONUtils.removeRepetitions(sequences)
 
 ## Build rules
@@ -122,6 +138,28 @@ final_clusts_name.append("Von2")
 final_clusts_times.append(time_2o)
 final_nb_dupli.append(getNbDuplication(states_von2))
 final_build_times.append(time_build_von2)
+print('Done.')
+
+## Sparse VON2 clustering 
+print('#################################')
+print(f'Computing clustering for Sparse VON2 (TM={threshold_multi}) ({nb_loop} infomap runs)')
+start_time = time.time()
+sparse_rule_builder = BuildRulesFast.FastHONRulesBuilder(sequences,2,1,threshold_multi)
+sparse_rules = sparse_rule_builder.ExtractRules()
+sparse_network = BuildNetwork.BuildNetwork(sparse_rules)
+time_build_sparse_von2 = time.time() - start_time
+sparse_von2_node_weight  = InfoMapClust.uniformNodeWeights(sparse_network)
+
+sparse_nodes, sparse_states_von2 = InfoMapClust.getStates(sparse_network)
+sparse_von2_codelength, sparse_von2_gain, sparse_von2_clust, sparse_time_2o = InfoMapClust.infomapStateClustering(sparse_nodes, sparse_states_von2, sparse_network, sparse_von2_node_weight, filename, nb_loop)
+
+final_clusts.append(sparse_von2_clust)
+final_codelengths.append(sparse_von2_codelength)
+final_gain.append(sparse_von2_gain)
+final_clusts_name.append("Sparse-Von2")
+final_clusts_times.append(sparse_time_2o)
+final_nb_dupli.append(getNbDuplication(sparse_states_von2))
+final_build_times.append(time_build_sparse_von2)
 print('Done.')
 
 ## Agg Von-2

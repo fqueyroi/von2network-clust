@@ -61,8 +61,7 @@ def readSequenceFile(filename, is_line_id = True, separator=' ') :
 				if len(seq) > 1:
 					sequences.append(seq)
 			else :
-				if len(split_line) > 1 :
-					sequences.append(split_line)
+				sequences.append(split_line)
 	return sequences
 ######################################################################################
 def removeRepetitions(sequences):
@@ -84,6 +83,7 @@ def removeRepetitions(sequences):
 		for s in seq:
 			if len(nseq) == 0 or s != nseq[-1]:
 				nseq.append(s)
-		nsequences.append(nseq)
+		if len(nseq) > 1:
+			nsequences.append(nseq)
 	return nsequences
 
