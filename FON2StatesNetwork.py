@@ -1,8 +1,41 @@
 # -*- coding: utf-8 -*-
 '''
 Functions used to generated a FON2 networks
-(Fixed order model taking all subsequence of length 2)
+(State Network taking all subsequence of length <=2)
+(Fixed order model taking all subsequence of length <=2)
 '''
+
+def fon2Rules(sequences):
+	fon2 = {}
+	for seq in sequences:
+		if len(seq)>=2:
+			for pos in range(1,len(seq)):
+				
+				i, j, k =  None, seq[pos-1], seq[pos]
+				if pos > 1:
+					i, j, k = seq[pos-2], seq[pos-1], seq[pos]
+				
+				## add order 1 rules (j,)
+				if (j,) not in fon2.keys():
+					fon2[(j,)] = {}
+				if k not in fon2[(j,)].keys():
+					fon2[(j,)][k] = 0.
+				fon2[(j,)][k] += 1.
+				
+				if pos > 1:
+					## add order 2 rules (i,j)
+					if (i, j) not in fon2.keys():
+						fon2[(i,j)] = {}
+					if k not in fon2[(i,j)].keys():
+						fon2[(i,j)][k] = 0.
+					fon2[(i,j)][k] += 1.
+	
+	## normalize transition probability
+	for r, nc in fon2.items():
+		sum_count = sum(nc.values())
+		for item, count_item in nc.items():
+			fon2[r][item] = count_item / sum_count
+	return fon2
 
 def order2Rules(sequences):
 	order2 = {}
@@ -36,8 +69,8 @@ def buildFON2Network(sequences):
 			if s not in nodes:
 				nodes.append(s)
 		if len(seq)>=3:
-			for i in range(2,len(seq)):
-				i, j, k = seq[i-2], seq[i-1], seq[i]
+			for pos in range(2,len(seq)):
+				i, j, k = seq[pos-2], seq[pos-1], seq[pos]
 				state_ij = str(i)+'-'+str(j)
 				state_jk = str(j)+'-'+str(k)
 				states[state_ij] = j

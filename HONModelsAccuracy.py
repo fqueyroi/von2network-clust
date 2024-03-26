@@ -30,9 +30,9 @@ import time
 
 ## Computing results on the Airports Dataset
 #filename = "./2011Q1_SEQ.csv"
-filename = "./US_flights.ngram"
-sep = ","
-threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
+# filename = "./US_flights.ngram"
+# sep = ","
+# threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Computing results on the Taxis Dataset
 #filename = "./trajectories_PoliceStation.csv"
@@ -40,9 +40,9 @@ threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
 # threshold_multi = 4.4 # Alpha, to adjust size of VON2 to Agg-VON2
 
 ## Computing results on the Wikispeedia dataset
-# filename = "./wikispeedia_top100.ngram"
-# sep = ","
-# threshold_multi = 2.4 
+filename = "./wikispeedia_top100.ngram"
+sep = ","
+threshold_multi = 2.4 
 
 ## Computing results on the MSNBC dataset
 # filename = "./msnbc990928.ngram"
@@ -52,6 +52,7 @@ threshold_multi = 2.8 # Alpha, to adjust size of VON2 to Agg-VON2
 ## Read trajectories file
 sequences = HONUtils.readSequenceFile(filename, False, sep)
 sequences = HONUtils.removeRepetitions(sequences)
+
 
 
 #########################
@@ -86,8 +87,9 @@ for i in range(nb_run):
 	sparse_rules = sparse_rule_builder.ExtractRules()
 	## Build Fix order 2 extensions (Fon2 network)
 	nodes, fon2_states, fon2_state_net = FON2StatesNetwork.buildFON2Network(training)
-	fon2rules = FON2StatesNetwork.order2Rules(training)
-
+	# fon2rules = FON2StatesNetwork.order2Rules(training)
+	fon2rules = FON2StatesNetwork.fon2Rules(training)
+	# print(f'Fon2rules = {len(fon2rules)}')
 
 	#############
 	## Results ##
@@ -106,6 +108,7 @@ for i in range(nb_run):
 			for p in rules:
 				if len(p) > 1 and p[1] == r[0]:
 					avg[r] += 1
+	
 	## Compute the Accuracy capabilities of the three HON networks
 	## Eq. (10) in the paper
 	score_non_agg = 0.
@@ -115,10 +118,11 @@ for i in range(nb_run):
 	nb_test_length3 = 0.
 	for test_index in range(len(testing)):
 		test_seq = testing[test_index]
-		if len(test_seq)>=3:
+		if len(test_seq)>=2:
 			score_non_agg += AccuracyUtils.nonAggRulesProbSeq(rules,test_seq)
 			score_agg     += AccuracyUtils.aggRulesProbSeq(firstOrderRules,clusts,test_seq)
-			score_fon2    += AccuracyUtils.fonProbSeq(fon2rules,test_seq)
+			# score_fon2    += AccuracyUtils.fonProbSeq(fon2rules,test_seq)
+			score_fon2    += AccuracyUtils.nonAggRulesProbSeq(fon2rules,test_seq)
 			score_sparse  += AccuracyUtils.nonAggRulesProbSeq(sparse_rules,test_seq)
 			nb_test_length3 += 1.
 	if nb_test_length3 > 0:
@@ -133,12 +137,12 @@ for i in range(nb_run):
 		for s in seq:
 			A.add(s)
 
-	# nn_fon2 = len(fon2_state_net)
-	nn_fon2 = len(A)
-	for state_ij, out_neigh in fon2_state_net.items():
-		if len(out_neigh)>0:
-			nn_fon2 += 1
+	# # nn_fon2 = len(fon2_state_net)
+	# nn_fon2 = len(A)
+	# for state_ij, out_neigh in fon2_state_net.items():
+	# 	if len(out_neigh)>0:
+	# 		nn_fon2 += 1
 
 
 	## Outputs
-	print(f'{i+1},{len(A)},{len(training)},{int(nb_test_length3)},{len(rules)},{len(sparse_rules)},{len(flatten_agg_rules)},{nn_fon2},{score_non_agg},{score_sparse},{score_agg},{score_fon2}')
+	print(f'{i+1},{len(A)},{len(training)},{int(nb_test_length3)},{len(rules)},{len(sparse_rules)},{len(flatten_agg_rules)},{len(fon2_states)},{score_non_agg},{score_sparse},{score_agg},{score_fon2}')

@@ -95,15 +95,15 @@ def nonAggRulesProbSeq(rules, seq):
 	--------
 	float
 	'''
-	if len(seq)<3:
+	if len(seq)<2:
 		return 0.
 	res = 0
-	for i in range(2,len(seq)):
+	for i in range(1,len(seq)):
 		#print "Context : "+str(seq[max(0,i-2):i])+" symb : "+str(seq[i])
 		p = probabilityNextSymb(rules,seq[max(0,i-2):i],seq[i])
 		#print "		p  = "+str(p)
 		res += p
-	return  res / (len(seq) - 2.)
+	return  res / (len(seq) - 1.)
 
 ################################################################################
 def aggProbabilityNextSymb(firstOrderRules, agg2ndOrderRules, context, symb):
@@ -161,13 +161,13 @@ def aggRulesProbSeq(firstOrderRules, agg2ndOrderRules, seq):
 	--------
 	float
 	'''
-	if len(seq)<3:
+	if len(seq)<2:
 		return 0.
 	res = 0
-	for i in range(2,len(seq)):
+	for i in range(1,len(seq)):
 		p = aggProbabilityNextSymb(firstOrderRules, agg2ndOrderRules, seq[max(0,i-2):i],seq[i])
 		res += p
-	return  res / (len(seq) - 2.)
+	return  res / (len(seq) - 1.)
 
 ################################################################################
 def fonProbabilityNextSymbol(order2rules, context, symb):

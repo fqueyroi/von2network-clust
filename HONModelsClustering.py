@@ -207,6 +207,7 @@ print('Done.')
 ## PRINT CLUSTERING RESULTS       ##
 ####################################
 nb_classes = []
+nb_classes_non_t = []
 cluster_counts = []
 symb_clust_counts = []
 for i in range(len(final_clusts)):
@@ -218,6 +219,7 @@ for i in range(len(final_clusts)):
 		if nb_occ > 1:
 			nb_non_t += 1
 	nb_classes.append(nb_c)
+	nb_classes_non_t.append(nb_non_t)
 	symb_clust_counts.append(symb_count)
 	cluster_counts.append(counts)
 
@@ -228,9 +230,9 @@ for i in range(len(nb_classes)):
 	print(f'{final_clusts_name[i]}: {round(final_build_times[i],2)} s / {round(final_clusts_times[i],2)} s')
 
 print('#################################')
-print('Number of Clusters / Code length / Gain CL:')
+print('Number of Clusters / Clusters Not isolated / Code length / Gain CL:')
 for i in range(len(nb_classes)):
-	print(f'{final_clusts_name[i]} : {nb_classes[i]} {final_codelengths[i]} {final_gain[i]}')
+	print(f'{final_clusts_name[i]} : {nb_classes[i]} {nb_classes_non_t[i]} {final_codelengths[i]} {final_gain[i]}')
 
 print('#################################')
 print('NMI similarity between clusterings')
